@@ -1,0 +1,10 @@
+mybatis:
+  config-location: classpath:mybatis/mybatis-config.xml
+  mapper-locations: classpath:mybatis/mapper/*.xml
+  type-aliases-package: com.sywwifi.api.pojo
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://139.196.243.110:3306/syw_test?useUnicode=true&characterEncoding=utf-8&useSSL=true&verifyServerCertificate=false
+    username: syw-dev
+    password: sywdev2017.

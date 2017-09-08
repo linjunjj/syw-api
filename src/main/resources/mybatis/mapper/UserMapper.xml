@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sywwifi.api.dao.UserMapper">
+    <resultMap id="BaseResultMap" type="com.sywwifi.api.pojo.User">
+        <constructor>
+            <idArg column="user_id" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="user_phone" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="user_name" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="user_password" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="user_reg_area" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="user_balance" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <arg column="user_when_login" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+            <arg column="user_login_time" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <arg column="user_head_img" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+            <arg column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+        </constructor>
+    </resultMap>
+    <sql id="Example_Where_Clause">
+        <where>
+            <foreach collection="oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" suffix=")" prefixOverrides="and">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")"
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Update_By_Example_Where_Clause">
+        <where>
+            <foreach collection="example.oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" suffix=")" prefixOverrides="and">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")"
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Base_Column_List">
+    user_id, user_phone, user_name, user_password, user_reg_area, user_balance, user_when_login, 
+    user_login_time, user_head_img, create_time, update_time
+  </sql>
+    <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.sywwifi.api.pojo.UserExample">
+        select
+        <if test="distinct">
+            distinct
+        </if>
+        'true' as QUERYID,
+        <include refid="Base_Column_List"/>
+        from syw_user
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from syw_user
+        where user_id = #{userId,jdbcType=VARCHAR}
+    </select>
+    <select id="countAllUser" resultType="Integer">
+    SELECT
+    count(user_id)
+    FROM syw_user
+    WHERE user_reg_area != '公司测试网关'
+  </select>
+    <select id="countAllUserByArea" resultType="Integer" parameterType="java.lang.String">
+        SELECT
+        count(user_id)
+        FROM syw_user
+        WHERE user_reg_area != '公司测试网关'
+        AND user_reg_area = #{area,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from syw_user
+    where user_id = #{userId,jdbcType=VARCHAR}
+  </delete>
+    <delete id="deleteByExample" parameterType="com.sywwifi.api.pojo.UserExample">
+        delete from syw_user
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </delete>
+    <insert id="insert" parameterType="com.sywwifi.api.pojo.User">
+    insert into syw_user (user_id, user_phone, user_name, 
+      user_password, user_reg_area, user_balance, 
+      user_when_login, user_login_time, user_head_img, 
+      create_time, update_time)
+    values (#{userId,jdbcType=VARCHAR}, #{userPhone,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, 
+      #{userPassword,jdbcType=VARCHAR}, #{userRegArea,jdbcType=VARCHAR}, #{userBalance,jdbcType=INTEGER}, 
+      #{userWhenLogin,jdbcType=TIMESTAMP}, #{userLoginTime,jdbcType=INTEGER}, #{userHeadImg,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+    <insert id="insertSelective" parameterType="com.sywwifi.api.pojo.User">
+        insert into syw_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="userPhone != null">
+                user_phone,
+            </if>
+            <if test="userName != null">
+                user_name,
+            </if>
+            <if test="userPassword != null">
+                user_password,
+            </if>
+            <if test="userRegArea != null">
+                user_reg_area,
+            </if>
+            <if test="userBalance != null">
+                user_balance,
+            </if>
+            <if test="userWhenLogin != null">
+                user_when_login,
+            </if>
+            <if test="userLoginTime != null">
+                user_login_time,
+            </if>
+            <if test="userHeadImg != null">
+                user_head_img,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">
+                #{userId,jdbcType=VARCHAR},
+            </if>
+            <if test="userPhone != null">
+                #{userPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="userName != null">
+                #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="userPassword != null">
+                #{userPassword,jdbcType=VARCHAR},
+            </if>
+            <if test="userRegArea != null">
+                #{userRegArea,jdbcType=VARCHAR},
+            </if>
+            <if test="userBalance != null">
+                #{userBalance,jdbcType=INTEGER},
+            </if>
+            <if test="userWhenLogin != null">
+                #{userWhenLogin,jdbcType=TIMESTAMP},
+            </if>
+            <if test="userLoginTime != null">
+                #{userLoginTime,jdbcType=INTEGER},
+            </if>
+            <if test="userHeadImg != null">
+                #{userHeadImg,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <select id="countByExample" parameterType="com.sywwifi.api.pojo.UserExample" resultType="java.lang.Integer">
+        select count(*) from syw_user
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </select>
+    <update id="updateByExampleSelective" parameterType="map">
+        update syw_user
+        <set>
+            <if test="record.userId != null">
+                user_id = #{record.userId,jdbcType=VARCHAR},
+            </if>
+            <if test="record.userPhone != null">
+                user_phone = #{record.userPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="record.userName != null">
+                user_name = #{record.userName,jdbcType=VARCHAR},
+            </if>
+            <if test="record.userPassword != null">
+                user_password = #{record.userPassword,jdbcType=VARCHAR},
+            </if>
+            <if test="record.userRegArea != null">
+                user_reg_area = #{record.userRegArea,jdbcType=VARCHAR},
+            </if>
+            <if test="record.userBalance != null">
+                user_balance = #{record.userBalance,jdbcType=INTEGER},
+            </if>
+            <if test="record.userWhenLogin != null">
+                user_when_login = #{record.userWhenLogin,jdbcType=TIMESTAMP},
+            </if>
+            <if test="record.userLoginTime != null">
+                user_login_time = #{record.userLoginTime,jdbcType=INTEGER},
+            </if>
+            <if test="record.userHeadImg != null">
+                user_head_img = #{record.userHeadImg,jdbcType=VARCHAR},
+            </if>
+            <if test="record.createTime != null">
+                create_time = #{record.createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="record.updateTime != null">
+                update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByExample" parameterType="map">
+        update syw_user
+        set user_id = #{record.userId,jdbcType=VARCHAR},
+        user_phone = #{record.userPhone,jdbcType=VARCHAR},
+        user_name = #{record.userName,jdbcType=VARCHAR},
+        user_password = #{record.userPassword,jdbcType=VARCHAR},
+        user_reg_area = #{record.userRegArea,jdbcType=VARCHAR},
+        user_balance = #{record.userBalance,jdbcType=INTEGER},
+        user_when_login = #{record.userWhenLogin,jdbcType=TIMESTAMP},
+        user_login_time = #{record.userLoginTime,jdbcType=INTEGER},
+        user_head_img = #{record.userHeadImg,jdbcType=VARCHAR},
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByPrimaryKeySelective" parameterType="com.sywwifi.api.pojo.User">
+        update syw_user
+        <set>
+            <if test="userPhone != null">
+                user_phone = #{userPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="userName != null">
+                user_name = #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="userPassword != null">
+                user_password = #{userPassword,jdbcType=VARCHAR},
+            </if>
+            <if test="userRegArea != null">
+                user_reg_area = #{userRegArea,jdbcType=VARCHAR},
+            </if>
+            <if test="userBalance != null">
+                user_balance = #{userBalance,jdbcType=INTEGER},
+            </if>
+            <if test="userWhenLogin != null">
+                user_when_login = #{userWhenLogin,jdbcType=TIMESTAMP},
+            </if>
+            <if test="userLoginTime != null">
+                user_login_time = #{userLoginTime,jdbcType=INTEGER},
+            </if>
+            <if test="userHeadImg != null">
+                user_head_img = #{userHeadImg,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where user_id = #{userId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.sywwifi.api.pojo.User">
+    update syw_user
+    set user_phone = #{userPhone,jdbcType=VARCHAR},
+      user_name = #{userName,jdbcType=VARCHAR},
+      user_password = #{userPassword,jdbcType=VARCHAR},
+      user_reg_area = #{userRegArea,jdbcType=VARCHAR},
+      user_balance = #{userBalance,jdbcType=INTEGER},
+      user_when_login = #{userWhenLogin,jdbcType=TIMESTAMP},
+      user_login_time = #{userLoginTime,jdbcType=INTEGER},
+      user_head_img = #{userHeadImg,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where user_id = #{userId,jdbcType=VARCHAR}
+  </update>
+</mapper>
